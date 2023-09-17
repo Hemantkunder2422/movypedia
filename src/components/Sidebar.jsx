@@ -7,6 +7,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import Skeleton from "@mui/material/Skeleton";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 
 const Container = styled.div`
@@ -29,6 +30,8 @@ const Icon = styled.div`
   text-align: center;
   cursor: pointer;
   transition: all 0.3 ease-in;
+  color: ${(props) => (props.active ? "#2097f3" : "#989595")};
+
   &:hover {
     color: #2097f3 !important;
   }
@@ -40,7 +43,7 @@ const ModalSearchBox = styled.div`
   margin: 0 auto;
   height: 100vh;
   padding: 30px;
-  overflow-y: scroll;
+  overflow-y: auto;
 `;
 
 const SearchBox = styled.div`
@@ -110,7 +113,6 @@ const Sidebar = ({ path }) => {
   useEffect(() => {
     fetchSearchedMovie();
   }, [query]);
-  console.log(movies);
 
   // https://image.tmdb.org/t/p/original/${movie.poster_path}
 
@@ -118,17 +120,17 @@ const Sidebar = ({ path }) => {
     <Container>
       <Wrapper>
         <Link to="/" style={{ textDecoration: "none", color: "#989595" }}>
-          <Icon path={path} location={location}>
+          <Icon path="home" active={location === "/"}>
             <HomeOutlinedIcon style={{ fontSize: "35px" }} />
           </Icon>
         </Link>
         <Link to="/movies" style={{ textDecoration: "none", color: "#989595" }}>
-          <Icon path={path} location={location}>
+          <Icon path="movie" active={location === "/movies"}>
             <MovieCreationOutlinedIcon style={{ fontSize: "35px" }} />
           </Icon>
         </Link>
         <Link to="/tv" style={{ textDecoration: "none", color: "#989595" }}>
-          <Icon path={path}>
+          <Icon path="tv" active={location === "/tv"}>
             <LiveTvOutlinedIcon style={{ fontSize: "35px" }} />
           </Icon>
         </Link>

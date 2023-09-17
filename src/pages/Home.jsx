@@ -5,7 +5,7 @@ import Sidebar from "../components/Sidebar";
 import MovieList from "../components/MovieList";
 import List from "../components/List";
 import Peoples from "../components/Peoples";
-import { useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 const Container = styled.div`
   background-color: #000;

@@ -150,6 +150,7 @@ const Movie = () => {
     "sVBEF7q7LqjHAWSnKwDbzmr2EMY.jpg",
   ]);
   const movie_id = useParams().id;
+
   const media_type = useParams().media;
   const [loading, setLoading] = useState(false);
   const [readmore, setReadmore] = useState(false);
