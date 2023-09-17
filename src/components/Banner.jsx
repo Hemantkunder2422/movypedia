@@ -123,6 +123,7 @@ const Banner = ({ media_type }) => {
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center center",
             backgroundSize: "cover",
+            minHeight: "100dvh",
           }}
         >
           <BoxWrapper>
