@@ -5,6 +5,7 @@ import axios from "axios";
 import Skeleton from "@mui/material/Skeleton";
 import "../App.css";
 import { Link } from "react-router-dom";
+import { Stack } from "@mui/material";
 
 const Box = styled.div`
   color: #fff;
@@ -93,6 +94,7 @@ const ReadmoreButton = styled.button`
 const Banner = ({ media_type }) => {
   const [BannerData, setBannerData] = useState({});
   const [readmore, setReadmore] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const key = "ab69c7f4e5150c9c2a8fce5f9ed40815";
 
@@ -100,13 +102,16 @@ const Banner = ({ media_type }) => {
   https://api.themoviedb.org/3/trending/${media_type}/day?api_key=${key}&region=IN`;
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(url);
       const movies = res.data.results;
       const movieIndex = Math.floor(Math.random() * movies.length) + 1;
       setBannerData(movies[movieIndex]);
+      setLoading(false);
     } catch (err) {
       console.log(err);
+      setLoading(false);
     }
   };
 
@@ -116,65 +121,83 @@ const Banner = ({ media_type }) => {
 
   return (
     <>
-      {BannerData && (
-        <Box
-          style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.9)),url(https://image.tmdb.org/t/p/original/${BannerData?.backdrop_path})`,
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center center",
-            backgroundSize: "cover",
-            minHeight: "100dvh",
-          }}
-        >
-          <BoxWrapper>
-            <Title>
-              {BannerData.title ||
-                BannerData.original_title ||
-                BannerData.original_name}
-            </Title>
+      {BannerData &&
+        (loading ? (
+          <Stack
+            spacing={5}
+            sx={{
+              backgroundColor: "#161515",
+              height: "100dvh",
+              width: "100dvw",
+            }}
+          >
+            <Skeleton variant="rectangular" width={800} height={200} />
+            <Skeleton variant="rectangular" width={700} height={100} />
+            <Skeleton variant="rectangular" width={510} height={100} />
+            <Skeleton variant="rectangular" width={50} height={100} />
+          </Stack>
+        ) : (
+          <Box
+            style={{
+              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.9)),url(https://image.tmdb.org/t/p/original/${BannerData?.backdrop_path})`,
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center center",
+              backgroundSize: "cover",
+              minHeight: "100dvh",
+            }}
+          >
+            <BoxWrapper>
+              <Title>
+                {BannerData.title ||
+                  BannerData.original_title ||
+                  BannerData.original_name}
+              </Title>
 
-            <ReviewBox>
-              <IMDBBox>
-                <IMDBIcon src="https://i.ibb.co/fF1PVTd/imdb.png" alt="imdb" />
-                <IMDBRating>
-                  {BannerData.vote_average?.toFixed(1) || "not available"}
-                </IMDBRating>
-              </IMDBBox>
-              <ReviewText>
-                {BannerData.release_date?.split("-")[0] ||
-                  BannerData.first_air_date?.split("-")[0]}
-              </ReviewText>
-              <ReviewText>{BannerData.media_type}</ReviewText>
-              <AgeCert>
-                <ReviewText color="#fff">
-                  {BannerData.adult ? "A 18+" : "UA"}
+              <ReviewBox>
+                <IMDBBox>
+                  <IMDBIcon
+                    src="https://i.ibb.co/fF1PVTd/imdb.png"
+                    alt="imdb"
+                  />
+                  <IMDBRating>
+                    {BannerData.vote_average?.toFixed(1) || "not available"}
+                  </IMDBRating>
+                </IMDBBox>
+                <ReviewText>
+                  {BannerData.release_date?.split("-")[0] ||
+                    BannerData.first_air_date?.split("-")[0]}
                 </ReviewText>
-              </AgeCert>
-            </ReviewBox>
-            <Desc>
-              {readmore
-                ? BannerData.overview
-                : `${BannerData?.overview?.substring(0, 150)}...`}
-              <ReadmoreButton onClick={() => setReadmore(!readmore)}>
-                {readmore ? "show less" : "show more"}
-              </ReadmoreButton>
-            </Desc>
-            <Link
-              to={
-                BannerData.id
-                  ? `/${BannerData.media_type}/${BannerData.id}`
-                  : ""
-              }
-              style={{ textDecoration: "none" }}
-            >
-              <HeroBtn>
-                <InfoOutlinedIcon />
-                Info
-              </HeroBtn>
-            </Link>
-          </BoxWrapper>
-        </Box>
-      )}
+                <ReviewText>{BannerData.media_type}</ReviewText>
+                <AgeCert>
+                  <ReviewText color="#fff">
+                    {BannerData.adult ? "A 18+" : "UA"}
+                  </ReviewText>
+                </AgeCert>
+              </ReviewBox>
+              <Desc>
+                {readmore
+                  ? BannerData.overview
+                  : `${BannerData?.overview?.substring(0, 150)}...`}
+                <ReadmoreButton onClick={() => setReadmore(!readmore)}>
+                  {readmore ? "show less" : "show more"}
+                </ReadmoreButton>
+              </Desc>
+              <Link
+                to={
+                  BannerData.id
+                    ? `/${BannerData.media_type}/${BannerData.id}`
+                    : ""
+                }
+                style={{ textDecoration: "none" }}
+              >
+                <HeroBtn>
+                  <InfoOutlinedIcon />
+                  Info
+                </HeroBtn>
+              </Link>
+            </BoxWrapper>
+          </Box>
+        ))}
     </>
   );
 };

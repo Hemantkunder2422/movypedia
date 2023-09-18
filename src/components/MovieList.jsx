@@ -31,6 +31,7 @@ const MovieCardBox = styled.div`
 
 const MovieList = ({ type, media_type }) => {
   const [trending, setTrending] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const key = "ab69c7f4e5150c9c2a8fce5f9ed40815";
 
@@ -38,11 +39,14 @@ const MovieList = ({ type, media_type }) => {
   https://api.themoviedb.org/3/${type}/${media_type}/day?api_key=${key}&region=IN`;
 
   const fetchTrendingMovies = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(url);
       setTrending(res.data.results);
+      setLoading(false);
     } catch (err) {
       console.log(err);
+      setLoading(false);
     }
   };
 
@@ -54,19 +58,23 @@ const MovieList = ({ type, media_type }) => {
     <Container>
       <Box>
         <Title>trending now</Title>
-        <MovieCardBox>
-          {trending?.map((movie) => {
-            return (
-              <MovieCard
-                key={movie.id}
-                poster={movie.poster_path}
-                height="600px"
-                movie_id={movie.id}
-                media_type={movie.media_type}
-              />
-            );
-          })}
-        </MovieCardBox>
+        {loading ? (
+          "loading"
+        ) : (
+          <MovieCardBox>
+            {trending?.map((movie) => {
+              return (
+                <MovieCard
+                  key={movie.id}
+                  poster={movie.poster_path}
+                  height="600px"
+                  movie_id={movie.id}
+                  media_type={movie.media_type}
+                />
+              );
+            })}
+          </MovieCardBox>
+        )}
       </Box>
     </Container>
   );
